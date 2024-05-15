@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy-job:
@@ -19,6 +19,14 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo -e "StrictHostKeyChecking no\n" >> ~/.ssh/config
+      - name: Build Application
+        run: |
+          ls
+          pwd
+          npm install 
+          ls
+          npm run build
+          ls
       - name: Deploy to EC2
         run: |
           scp -o StrictHostKeyChecking=no -r * ${{ secrets.EC2_INSTANCE_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
